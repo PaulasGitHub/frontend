@@ -20,27 +20,26 @@ export default function Product() {
     }
 
     const withMwSt = () => {
-        //   console.log(products);
         const tmp = products.map((product) => {
             return {
                 itemId: product.itemId,
                 price: product.priceWithoutVat
             }
         });
+        console.log(tmp);
         fetch("http://localhost:8083/api/mwst", {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
             mode: 'cors',
-            body: JSON.stringify({
-                prices: tmp,
-            }),
+            body: JSON.stringify(
+              tmp,
+            ),
         })
             .then((res) => res.json())
             .then((result) => {
-                setProducts(result);
-                //   console.log(result);
+                setProducts(result.priceList);
             })
     }
 
@@ -54,9 +53,7 @@ export default function Product() {
     }
 
     const deliveryInfo = () => {
-        fetch("http://localhost:8083/api/products/delivery_info",
-           
-        )
+        fetch("http://localhost:8083/api/products/delivery_info")
             .then(res => res.json())
             .then((result) => {
                 setProducts(result.storageList);
@@ -87,7 +84,7 @@ export default function Product() {
                         Material: {product.material} <br />
                         Weight: {product.weight} <br />
                         Price without MwSt: {product.priceWithoutVat} € <br />
-                        Price with MwSt: {product.priceWithVat} € <br />
+                        Price with MwSt: {product.price} € <br />
                         Delivery Time: {product.deliveryTime} <br />
                         Amount: {product.amount} <br />
                         Location: {product.location} <br />
