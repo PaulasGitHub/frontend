@@ -44,7 +44,6 @@ export default function Product() {
             })
     }
 
-
     const withoutMwSt = () => {
         fetch("http://localhost:8083/api/products")
             .then(res => res.json())
@@ -54,9 +53,15 @@ export default function Product() {
             )
     }
 
-    const allInfo = (e) => {
-        e.preventDefault();
-
+    const deliveryInfo = () => {
+        fetch("http://localhost:8083/api/products/delivery_info",
+           
+        )
+            .then(res => res.json())
+            .then((result) => {
+                setProducts(result.storageList);
+            }
+            )
     }
 
     return (
@@ -67,14 +72,14 @@ export default function Product() {
                 </Button>
                 <Button variant="contained" color="secondary" onClick={(withMwSt)}>
                     With MwSt
-                </Button> <Button variant="contained" color="default" onClick={(allInfo)}>
-                    All Info
+                </Button> <Button variant="contained" color="default" onClick={(deliveryInfo)}>
+                    Delivery Info
                 </Button>
             </Paper>
 
             <Paper elevation={3} style={paperStyle}>
                 {products.map(product => (
-                    <Paper elevation={6} style={{ margin: "10px", padding: "15px", textAlign: "left" }} key={product.itemId}>
+                    <Paper elevation={6} style={{ margin: "10px", padding: "15px", textAlign: "left" }} >
                         Id: {product.itemId} <br />
                         Name: {product.name} <br />
                         Description: {product.description} <br />
@@ -82,7 +87,10 @@ export default function Product() {
                         Material: {product.material} <br />
                         Weight: {product.weight} <br />
                         Price without MwSt: {product.priceWithoutVat} € <br />
-                        Price with MwSt: {product.priceWithVat} €
+                        Price with MwSt: {product.priceWithVat} € <br />
+                        Delivery Time: {product.deliveryTime} <br />
+                        Amount: {product.amount} <br />
+                        Location: {product.location} <br />
                     </Paper>
                 ))
                 }
