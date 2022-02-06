@@ -19,20 +19,56 @@ export default function Product() {
         console.log("Button");
     }
 
-   useEffect(() => {
-        fetch("http://localhost:8080/api/products")
+    const withMwSt = () => {
+        //   console.log(products);
+        const tmp = products.map((product) => {
+            return {
+                itemId: product.itemId,
+                price: product.priceWithoutVat
+            }
+        });
+        fetch("http://localhost:8083/api/mwst", {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            mode: 'cors',
+            body: JSON.stringify({
+                prices: tmp,
+            }),
+        })
+            .then((res) => res.json())
+            .then((result) => {
+                setProducts(result);
+                //   console.log(result);
+            })
+    }
+
+
+    const withoutMwSt = () => {
+        fetch("http://localhost:8083/api/products")
             .then(res => res.json())
             .then((result) => {
                 setProducts(result);
             }
             )
-    }, [])
+    }
+
+    const allInfo = (e) => {
+        e.preventDefault();
+
+    }
 
     return (
         <Container>
             <Paper elevation={2} style={paperStyle}>
-                <Button variant="contained" color="primary" onClick={(handleClick)}>
+                <Button variant="contained" color="primary" onClick={(withoutMwSt)}>
                     Without MwSt
+                </Button>
+                <Button variant="contained" color="secondary" onClick={(withMwSt)}>
+                    With MwSt
+                </Button> <Button variant="contained" color="default" onClick={(allInfo)}>
+                    All Info
                 </Button>
             </Paper>
 
@@ -46,6 +82,7 @@ export default function Product() {
                         Material: {product.material} <br />
                         Weight: {product.weight} <br />
                         Price without MwSt: {product.priceWithoutVat} € <br />
+                        Price with MwSt: {product.priceWithVat} €
                     </Paper>
                 ))
                 }
