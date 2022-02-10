@@ -26,7 +26,6 @@ export default function Product() {
                 price: product.priceWithoutVat
             }
         });
-        console.log(tmp);
         fetch("http://localhost:8083/api/mwst", {
             method: 'POST',
             headers: {
@@ -56,7 +55,7 @@ export default function Product() {
         fetch("http://localhost:8083/api/products/delivery_info")
             .then(res => res.json())
             .then((result) => {
-                setProducts(result.storageList);
+                setProducts(result.storageInfoList);
             }
             )
     }
@@ -85,7 +84,7 @@ export default function Product() {
                         Weight: {product.weight} <br />
                         Price without MwSt: {product.priceWithoutVat} € <br />
                         Price with MwSt: {product.price} € <br />
-                        Delivery Time: {product.deliveryTime} <br />
+                        Delivery Time: {(product.deliveryTime)/86400000 + " day(s)"} <br />
                         Amount: {product.amount} <br />
                         Location: {product.location} <br />
                     </Paper>
